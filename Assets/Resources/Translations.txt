@@ -1,0 +1,5 @@
+	English	Russian	Ukrainian	German	Turkish	Spanish	Portuguese	Japanese	French	Italian
+cancel	no	нет	немає	Nein	hayır	no	não	いいえ	non	no
+coins	coins	монет	монети	Geldstücke	altınlar	monedas	moedas	コイン	pièces	monete
+crystall	diamond	кристалл	алмаз	Brillant	elmas	diamante	diamante	ダイヤモンド	diamant	diamante
+level	level	уровень	рівень	Niveau	seviye	nivel	nível	レベル	égaliser	livello
