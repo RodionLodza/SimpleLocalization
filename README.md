@@ -1,5 +1,5 @@
 # SimpleLocalization
-Plugin for localizing the Text component in Unity. It uses a TSV file with keys and translated texts in different languages. Has a window for editing localization.
+Plugin for localizing the Text component in Unity. It uses a TSV file with keys and translated texts in different languages. Has a convenient edtior window for work with localization (change language, parsing file, testing).
 
 [![](https://img.shields.io/badge/license-MIT-green)](https://github.com/RodionLodza/simplelocalization/blob/master/LICENSE)
 [![Watch on GitHub](https://img.shields.io/github/watchers/RodionLodza/simplelocalization.svg?style=social)](https://github.com/RodionLodza/simplelocalization/watchers)
