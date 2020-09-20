@@ -41,9 +41,9 @@ namespace SimpleLocalization.Testing
         private void ShowGeneralInformation()
         {
             var availableLanguages = Localizator.GetAvailableLanguages();
-            displayedOptions = new string[availableLanguages.Count];
+            displayedOptions = new string[availableLanguages.Length];
 
-            for (int i = 0; i < availableLanguages.Count; i++)
+            for (int i = 0; i < availableLanguages.Length; i++)
                 displayedOptions[i] = availableLanguages[i].ToString();
 
             var italicStyle = new GUIStyle(GUI.skin.GetStyle("Label"));
@@ -52,14 +52,14 @@ namespace SimpleLocalization.Testing
 
             EditorGUILayout.LabelField($"General information", EditorStyles.boldLabel);
             EditorGUILayout.LabelField($"Current language: ", Localizator.GetCurrentUseLanguage(), italicStyle);
-            EditorGUILayout.LabelField($"Parsed languages: ", availableLanguages.Count.ToString(), italicStyle);
+            EditorGUILayout.LabelField($"Parsed languages: ", availableLanguages.Length.ToString(), italicStyle);
             EditorGUILayout.Space();
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField($"File parsing", EditorStyles.boldLabel);
             if (GUILayout.Button("Parse translations file"))
                 Localizator.ParseTranslation();
-            if (availableLanguages.Count == 0)
+            if (availableLanguages.Length == 0)
                 EditorGUILayout.HelpBox("Localizator didn't find any language in translations file.", MessageType.Warning);
         }
 

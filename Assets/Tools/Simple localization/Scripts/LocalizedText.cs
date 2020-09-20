@@ -47,7 +47,7 @@ namespace SimpleLocalization
 
             string localizedText = Localizator.Translate(translationKey, caseType);
             if (string.IsNullOrEmpty(localizedText))
-                localizedText = "Key not found!";
+                localizedText = $"Key '{translationKey}' not found!";
             textComponent.text = localizedText;
         }
     }

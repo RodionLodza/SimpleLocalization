@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SimpleLocalization.Helpers;
 using UnityEngine;
+using System.Linq;
 using System.IO;
 using System;
 
@@ -13,8 +14,8 @@ namespace SimpleLocalization
         private const string NameTranslationsFile = "Translations.txt";
         private const string ForceSetLanguage = "ForceSetLanguage";
 
-        private static List<SystemLanguage> languages = new List<SystemLanguage>();
-        private static List<LocalizedTextElement> localizedTexts = new List<LocalizedTextElement>();
+        private static List<LocalizedLanguageElement> localizedLanguages = new List<LocalizedLanguageElement>();
+        private static LocalizedLanguageElement cashLocalizedCurrentLanguage = null;
 
         static Localizator()
         {
@@ -32,25 +33,28 @@ namespace SimpleLocalization
                 string[] translationsLine = translationsFile.text.Split('\n');
                 if (translationsLine.Length > 0)
                 {
-                    string[] line = translationsLine[0].Trim().Split('	');
+                    localizedLanguages.Clear();
+                    string[] line = translationsLine[0].Trim().Split('\t');
 
-                    if (line.Length > 1)
-                        for (int i = 0; i < line.Length; i++)
-                            languages.Add(ParseSystemLanguage(line[i]));
-
-                    for (int i = 1; i < translationsLine.Length; i++)
+                    for (int i = 0; i < line.Length; i++)
                     {
-                        line = translationsLine[i].Trim().Split('	');
-                        if (line.Length > 1 && line[0].Length > 0)
+                        LocalizedLanguageElement newLanguage = new LocalizedLanguageElement(ParseSystemLanguage(line[i]));
+                        localizedLanguages.Add(newLanguage);
+                    }
+
+                    for (int j = 1; j < translationsLine.Length; j++)
+                    {
+                        line = translationsLine[j].Trim().Split('\t');
+                        if (line.Length > 1)
                         {
-                            LocalizedTextElement newTranslations = new LocalizedTextElement(line[0].Trim(), languages.Count);
-
-                            for (int j = 1; j < line.Length; j++)
-                                newTranslations.Translations[j - 1] = line[j].Trim().NewlineReplacer();
-
-                            localizedTexts.Add(newTranslations);
+                            for (int k = 0; k < localizedLanguages.Count; k++)
+                            {
+                                localizedLanguages[k].AddTranlsation(new LocalizedTextElement(line[0].Trim(), line[k + 1].Trim().NewlineReplacer()));
+                            }
                         }
                     }
+
+                    CacheCurrentLanguage();
                 }
                 else
                 {
@@ -79,9 +83,9 @@ namespace SimpleLocalization
         /// <returns></returns>
         public static string Translate(string key, CaseType caseType = CaseType.Default)
         {
-            LocalizedTextElement localizedText = localizedTexts.Find(x => x.Key == key);
-            return localizedText is null ? key 
-                : SetCaseType(localizedText.Translations[IsLanguageExsits(GetCurrentLanguage())], caseType);
+            string translatedString = cashLocalizedCurrentLanguage.GetLocalizedText(key);
+            return translatedString is null ? $"Key '{key}' not found!"
+                : SetCaseType(translatedString, caseType);
         }
 
         /// <summary>
@@ -92,15 +96,14 @@ namespace SimpleLocalization
         /// <returns></returns>
         public static string Translate(string key, SystemLanguage language, CaseType caseType = CaseType.Default)
         {
-            LocalizedTextElement localizedText = localizedTexts.Find(x => x.Key == key);
-            return localizedText is null ? key 
-                : SetCaseType(localizedText.Translations[IsLanguageExsits(language)], caseType);
+            LocalizedLanguageElement localizedLanguage = localizedLanguages.Find(x => x.Language == language);
+            return localizedLanguage is null ? $"Key '{key}' not found for language {language}!"
+                : SetCaseType(localizedLanguage.GetLocalizedText(key), caseType);
         }
 
-        private static int IsLanguageExsits(SystemLanguage language)
+        private static void CacheCurrentLanguage()
         {
-            int lanuageIndex = languages.IndexOf(language);
-                return lanuageIndex == -1 ? 0 : lanuageIndex;
+            cashLocalizedCurrentLanguage = localizedLanguages.Find(x => x.Language == GetCurrentLanguage());
         }
 
         #endregion 
@@ -147,15 +150,20 @@ namespace SimpleLocalization
         public static void ChangeLanguage(SystemLanguage language)
         {
             PlayerPrefs.SetInt(ForceSetLanguage, (int)language);
+            CacheCurrentLanguage();
             OnLanguageChanged?.Invoke();
         }
 
         private static SystemLanguage GetCurrentLanguage()
         {
+            SystemLanguage currentLanguage;
             if (PlayerPrefs.HasKey(ForceSetLanguage))
-                return (SystemLanguage)PlayerPrefs.GetInt(ForceSetLanguage);
+                currentLanguage = (SystemLanguage)PlayerPrefs.GetInt(ForceSetLanguage);
             else
-                return Application.systemLanguage;
+                currentLanguage = Application.systemLanguage;
+
+            return localizedLanguages.Where(x => x.Language == currentLanguage).FirstOrDefault() is null ? 
+                localizedLanguages[0].Language : currentLanguage;
         }
 
         #endregion
@@ -167,15 +175,15 @@ namespace SimpleLocalization
         /// </summary>
         public static void ChangeLanguage()
         {
-            if (languages.Count == 0)
+            if (localizedLanguages.Count == 0)
             {
                 Debug.LogWarning("Localizator didn't find any language in translations file.");
                 return;
             }
 
-            int indexCurrentLanguage = languages.IndexOf(GetCurrentLanguage());
-            int indexNextLanguage = (indexCurrentLanguage + 1) % languages.Count;
-            ChangeLanguage(languages[indexNextLanguage]);
+            int indexCurrentLanguage = localizedLanguages.IndexOf(cashLocalizedCurrentLanguage);
+            int indexNextLanguage = (indexCurrentLanguage + 1) % localizedLanguages.Count;
+            ChangeLanguage(localizedLanguages[indexNextLanguage].Language);
 
             OnLanguageChanged?.Invoke();
         }
@@ -187,13 +195,13 @@ namespace SimpleLocalization
         /// <param name="indexLanguage"></param>
         public static void ChangeLanguage(int indexLanguage)
         {
-            if (languages.Count == 0)
+            if (localizedLanguages.Count == 0)
             {
                 Debug.LogWarning("Localizator didn't find any language in translations file.");
                 return;
             }
 
-            ChangeLanguage(languages[indexLanguage]);
+            ChangeLanguage(localizedLanguages[indexLanguage].Language);
 
             OnLanguageChanged?.Invoke();
         }
@@ -202,11 +210,11 @@ namespace SimpleLocalization
         /// Return list parsed languages (for editor test only).
         /// </summary>
         /// <returns></returns>
-        public static List<SystemLanguage> GetAvailableLanguages()
+        public static SystemLanguage[] GetAvailableLanguages()
         {
-            if (languages.Count == 0)
+            if (localizedLanguages.Count == 0)
                 ParseTranslation();
-            return languages;
+            return localizedLanguages.Select(x => x.Language).ToArray();
         }
 
         /// <summary>
@@ -223,6 +231,7 @@ namespace SimpleLocalization
         public static void SetDefaultLanguage()
         {
             PlayerPrefs.DeleteKey(ForceSetLanguage);
+            CacheCurrentLanguage();
             OnLanguageChanged?.Invoke();
         }
 
@@ -249,15 +258,48 @@ namespace SimpleLocalization
 
 namespace SimpleLocalization.Helpers
 {
+    public class LocalizedLanguageElement
+    {
+        public SystemLanguage Language { get; set; }
+
+        private List<LocalizedTextElement> translations;
+
+        public LocalizedLanguageElement(SystemLanguage language)
+        {
+            Language = language;
+            translations = new List<LocalizedTextElement>();
+        }
+
+        public void AddTranlsation(LocalizedTextElement localizedTextElement)
+        {
+            translations.Add(localizedTextElement);
+        }
+
+        public string GetLocalizedText(string translationKey)
+        {
+            string localizedString = null;
+            foreach (var translation in translations)
+            {
+                if (string.Equals(translationKey, translation.TranslationKey))
+                {
+                    localizedString = translation.TranslatedText;
+                    break;
+                }
+            }
+
+            return localizedString;
+        }
+    }
+
     public class LocalizedTextElement
     {
-        public string Key { get; set; }
-        public string[] Translations { get; set; }
+        public string TranslationKey = null;
+        public string TranslatedText = null;
 
-        public LocalizedTextElement(string key, int languagesCount)
+        public LocalizedTextElement(string translationKey, string translatedText)
         {
-            this.Key = key;
-            Translations = new string[languagesCount];
+            TranslationKey = translationKey;
+            TranslatedText = translatedText;
         }
     }
 }
