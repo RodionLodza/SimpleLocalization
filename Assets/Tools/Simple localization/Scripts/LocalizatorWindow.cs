@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+
+using UnityEditor;
 using UnityEngine;
 
 namespace Tools.Localizator.Testing
@@ -8,7 +10,7 @@ namespace Tools.Localizator.Testing
         [SerializeField] private int selectedLanguageIndex = 0;
         [SerializeField] private Texture logo = null;
 
-        private string[] displayedOptions;
+        private string[] displayedOptions = null;
 
         [MenuItem("Tools/Localizator")]
         public static void ShowWindow()
@@ -84,3 +86,5 @@ namespace Tools.Localizator.Testing
         }
     }
 }
+
+#endif
