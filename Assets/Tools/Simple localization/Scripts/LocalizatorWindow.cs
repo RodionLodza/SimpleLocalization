@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Tools.Localizator.Testing
+namespace SimpleLocalization.Testing
 {
     public class LocalizatorWindow : EditorWindow
     {
@@ -12,10 +12,10 @@ namespace Tools.Localizator.Testing
 
         private string[] displayedOptions = null;
 
-        [MenuItem("Tools/Localizator")]
+        [MenuItem("Tools/SimpleLocalization")]
         public static void ShowWindow()
         {
-            GetWindowWithRect<LocalizatorWindow>(new Rect(0f, 0f, 300, 280), false, "Localizator", true);
+            GetWindowWithRect<LocalizatorWindow>(new Rect(0f, 0f, 300, 280), false, "SimpleLocalization", true);
         }
 
         private void OnGUI()

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using SimpleLocalization.Helpers;
 using UnityEngine;
 using System.IO;
 using System;
 
-namespace Tools.Localizator
+namespace SimpleLocalization
 {
     public static class Localizator
     {
@@ -76,7 +77,7 @@ namespace Tools.Localizator
         /// <param name="key"></param>
         /// <param name="caseType"></param>
         /// <returns></returns>
-        public static string Translate(string key, CaseType caseType = CaseType.Normal)
+        public static string Translate(string key, CaseType caseType = CaseType.Default)
         {
             LocalizedTextElement localizedText = localizedTexts.Find(x => x.Key == key);
             return localizedText is null ? key 
@@ -89,7 +90,7 @@ namespace Tools.Localizator
         /// <param name="key"></param>
         /// <param name="caseType"></param>
         /// <returns></returns>
-        public static string Translate(string key, SystemLanguage language, CaseType caseType = CaseType.Normal)
+        public static string Translate(string key, SystemLanguage language, CaseType caseType = CaseType.Default)
         {
             LocalizedTextElement localizedText = localizedTexts.Find(x => x.Key == key);
             return localizedText is null ? key 
@@ -110,7 +111,7 @@ namespace Tools.Localizator
         {
             switch (caseType)
             {
-                case CaseType.Normal:
+                case CaseType.Default:
                     return translatedText;
                 case CaseType.Uppercase:
                     return translatedText.ToUpper();
@@ -237,6 +238,17 @@ namespace Tools.Localizator
         #endregion
     }
 
+    public enum CaseType
+    {
+        Default,
+        Uppercase,
+        Capitalize,
+        Lowercase
+    }
+}
+
+namespace SimpleLocalization.Helpers
+{
     public class LocalizedTextElement
     {
         public string Key { get; set; }
@@ -247,13 +259,5 @@ namespace Tools.Localizator
             this.Key = key;
             Translations = new string[languagesCount];
         }
-    }
-
-    public enum CaseType
-    {
-        Normal,
-        Uppercase,
-        Capitalize,
-        Lowercase
     }
 }
