@@ -2,19 +2,17 @@
 using SimpleLocalization.Helpers;
 using UnityEngine;
 using System.Linq;
-using System.IO;
 using System;
 
 namespace SimpleLocalization
 {
     public static class Localizator
     {
-        public static Action OnLanguageChanged;
-
-        private const string NameTranslationsFile = "Translations.txt";
+        public static event Action OnLanguageChanged = null;
+        
         private const string ForceSetLanguage = "ForceSetLanguage";
 
-        private static List<LocalizedLanguageElement> localizedLanguages = new List<LocalizedLanguageElement>();
+        private static List<LocalizedLanguageElement> localizedLanguages = null;
         private static LocalizedLanguageElement cashLocalizedCurrentLanguage = null;
 
         static Localizator()
@@ -22,58 +20,22 @@ namespace SimpleLocalization
             ParseTranslationFile();
         }
 
-        #region General methods
+        #region Parsing methods
 
         private static void ParseTranslationFile()
         {
-            TextAsset translationsFile = Resources.Load<TextAsset>(Path.GetFileNameWithoutExtension(NameTranslationsFile));
-
-            if (translationsFile != null)
-            {
-                string[] translationsLine = translationsFile.text.Split('\n');
-                if (translationsLine.Length > 0)
-                {
-                    localizedLanguages.Clear();
-                    string[] line = translationsLine[0].Trim().Split('\t');
-
-                    for (int i = 0; i < line.Length; i++)
-                    {
-                        LocalizedLanguageElement newLanguage = new LocalizedLanguageElement(ParseSystemLanguage(line[i]));
-                        localizedLanguages.Add(newLanguage);
-                    }
-
-                    for (int j = 1; j < translationsLine.Length; j++)
-                    {
-                        line = translationsLine[j].Trim().Split('\t');
-                        if (line.Length > 1)
-                        {
-                            for (int k = 0; k < localizedLanguages.Count; k++)
-                            {
-                                localizedLanguages[k].AddTranlsation(new LocalizedTextElement(line[0].Trim(), line[k + 1].Trim().NewlineReplacer()));
-                            }
-                        }
-                    }
-
-                    CacheCurrentLanguage();
-                }
-                else
-                {
-                    Debug.LogWarning("Translations file is empty!");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("Translations file doesn't exist!");
-            }
+            localizedLanguages = LocalizatorParsing.ParseTranslationFile();
+            CacheCurrentLanguage();
         }
 
-        private static SystemLanguage ParseSystemLanguage(string languageName)
+        private static void CacheCurrentLanguage()
         {
-            if (!Enum.IsDefined(typeof(SystemLanguage), languageName))
-                return SystemLanguage.Unknown;
-
-            return (SystemLanguage)Enum.Parse(typeof(SystemLanguage), languageName);
+            cashLocalizedCurrentLanguage = localizedLanguages.Find(x => x.Language == GetCurrentLanguage());
         }
+
+        #endregion
+
+        #region Translations methods
 
         /// <summary>
         /// Return translated text by key for current language.
@@ -85,7 +47,7 @@ namespace SimpleLocalization
         {
             string translatedString = cashLocalizedCurrentLanguage.GetLocalizedText(key);
             return translatedString is null ? $"Key '{key}' not found!"
-                : SetCaseType(translatedString, caseType);
+                : translatedString.SetCaseType(caseType);
         }
 
         /// <summary>
@@ -98,48 +60,10 @@ namespace SimpleLocalization
         {
             LocalizedLanguageElement localizedLanguage = localizedLanguages.Find(x => x.Language == language);
             return localizedLanguage is null ? $"Key '{key}' not found for language {language}!"
-                : SetCaseType(localizedLanguage.GetLocalizedText(key), caseType);
-        }
-
-        private static void CacheCurrentLanguage()
-        {
-            cashLocalizedCurrentLanguage = localizedLanguages.Find(x => x.Language == GetCurrentLanguage());
+                : localizedLanguage.GetLocalizedText(key).SetCaseType(caseType);
         }
 
         #endregion 
-
-        #region Text formatting methods
-
-        private static string SetCaseType(string translatedText, CaseType caseType)
-        {
-            switch (caseType)
-            {
-                case CaseType.Default:
-                    return translatedText;
-                case CaseType.Uppercase:
-                    return translatedText.ToUpper();
-                case CaseType.Capitalize:
-                    return translatedText.ToCapitalize();
-                case CaseType.Lowercase:
-                    return translatedText.ToLower();
-                default:
-                    return translatedText;
-            }
-        }
-
-        private static string ToCapitalize(this string translatedText)
-        {
-            translatedText.ToLower();
-            char.ToUpper(translatedText[0]);
-            return translatedText;
-        }
-
-        private static string NewlineReplacer(this string translatedText)
-        {
-            return translatedText.Replace("<br>", "\n");
-        }
-
-        #endregion
 
         #region Change language methods
 
@@ -253,53 +177,5 @@ namespace SimpleLocalization
         Uppercase,
         Capitalize,
         Lowercase
-    }
-}
-
-namespace SimpleLocalization.Helpers
-{
-    public class LocalizedLanguageElement
-    {
-        public SystemLanguage Language { get; set; }
-
-        private List<LocalizedTextElement> translations;
-
-        public LocalizedLanguageElement(SystemLanguage language)
-        {
-            Language = language;
-            translations = new List<LocalizedTextElement>();
-        }
-
-        public void AddTranlsation(LocalizedTextElement localizedTextElement)
-        {
-            translations.Add(localizedTextElement);
-        }
-
-        public string GetLocalizedText(string translationKey)
-        {
-            string localizedString = null;
-            foreach (var translation in translations)
-            {
-                if (string.Equals(translationKey, translation.TranslationKey))
-                {
-                    localizedString = translation.TranslatedText;
-                    break;
-                }
-            }
-
-            return localizedString;
-        }
-    }
-
-    public class LocalizedTextElement
-    {
-        public string TranslationKey = null;
-        public string TranslatedText = null;
-
-        public LocalizedTextElement(string translationKey, string translatedText)
-        {
-            TranslationKey = translationKey;
-            TranslatedText = translatedText;
-        }
     }
 }
