@@ -3,6 +3,7 @@ using SimpleLocalization.Settings;
 using UnityEngine.Networking;
 using System.Collections;
 using System;
+using UnityEngine;
 
 namespace SimpleLocalization.Helpers
 {
@@ -47,6 +48,11 @@ namespace SimpleLocalization.Helpers
             }
         }
 
+        public static void ForceDownloadTranslationFile(Action onLoadedEnded)
+        {
+            EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettingsWrapper.ActualTableLink, onLoadedEnded));
+        }
+
         private static IEnumerator StartLoadingFile(string link, Action onLoadedEnded)
         {
             UnityWebRequest request = UnityWebRequest.Get(link);
@@ -56,7 +62,7 @@ namespace SimpleLocalization.Helpers
 
             if (request.isNetworkError || request.isHttpError)
             {
-                // TODO  Add debug
+                Debug.LogWarning("<color=red>SIMPLE-LOCALIZATOR ERROR</color>: Network or http error on downloading localizator file.");
                 onLoadedEnded?.Invoke();
             }
             else

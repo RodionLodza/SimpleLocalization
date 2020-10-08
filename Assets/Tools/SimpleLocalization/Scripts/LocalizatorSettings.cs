@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using SimpleLocalization.Settings.Data;
+using UnityEngine;
 using System.IO;
 using System;
 
-namespace SimpleLocalization.Settings
+namespace SimpleLocalization.Settings.Data
 {
     public class LocalizatorSettings
     {
@@ -12,7 +13,10 @@ namespace SimpleLocalization.Settings
         public PreprocessBuildDownloading preprocessingDownloading = default;
         public int downloadingTimeout = 5;
     }
+}
 
+namespace SimpleLocalization.Settings
+{
     public class LocalizatorSettingsWrapper
     {
         private static LocalizatorSettings localizatorSettings = null;
@@ -27,25 +31,9 @@ namespace SimpleLocalization.Settings
                 string link = localizatorSettings.developmentTableLink;
 
 #if !DEVELOPMENT_BUILD
-            link = localizatorSettings.releaseTableLink;
+                link = localizatorSettings.releaseTableLink;
 #endif
                 return link;
-            }
-        }
-
-        public static string ReleaseTableLink
-        {
-            get
-            {
-                return localizatorSettings.releaseTableLink;
-            }
-        }
-
-        public static string DevelopmentTableLink
-        {
-            get
-            {
-                return localizatorSettings.developmentTableLink;
             }
         }
 
@@ -73,13 +61,20 @@ namespace SimpleLocalization.Settings
             }
         }
 
-#endregion
+        #endregion
 
-#region General methods
+        #region General methods
 
         public static void LoadSettings(Action onLoadingSettingFinished = null)
         {
             TextAsset settingsFile = Resources.Load<TextAsset>("SimpleLocalization/LocalizatorSettings");
+
+            if (settingsFile == null)
+            {
+                Debug.LogWarning("<color=red>SIMPLE-LOCALIZATOR ERROR</color>: Can't find localizator setting file Resources/SimpleLocalization/LocalizatorSettings.json");
+                return;
+            }
+
             var settingsString = settingsFile.text;
             localizatorSettings = JsonUtility.FromJson<LocalizatorSettings>(settingsString);
             onLoadingSettingFinished?.Invoke();
@@ -94,7 +89,7 @@ namespace SimpleLocalization.Settings
             onSavingSettingFinished?.Invoke();
         }
 
-#endregion
+        #endregion
     }
 
     public enum DownloadingType

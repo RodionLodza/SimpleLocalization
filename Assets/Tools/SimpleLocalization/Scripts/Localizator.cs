@@ -21,12 +21,12 @@ namespace SimpleLocalization
             LocalizatorSettingsWrapper.LoadSettings(LoadTranslationFile);
         }
 
+        #region General methods
+
         private static void LoadTranslationFile()
         {
             LocalizatorWebLoader.DownloadTranslationFile(ParseTranslationFile);
         }
-
-        #region Parsing methods
 
         private static void ParseTranslationFile()
         {

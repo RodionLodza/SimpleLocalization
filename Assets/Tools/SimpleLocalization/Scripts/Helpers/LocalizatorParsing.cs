@@ -39,12 +39,12 @@ namespace SimpleLocalization.Helpers
                 }
                 else
                 {
-                    Debug.LogWarning("Translations file is empty!");
+                    Debug.LogWarning("<color=red>SIMPLE-LOCALIZATOR ERROR</color>: Translations file is empty!");
                 }
             }
             else
             {
-                Debug.LogWarning("Translations file doesn't exist!");
+                Debug.LogWarning("<color=red>SIMPLE-LOCALIZATOR ERROR</color>: Translations file doesn't exist!");
             }
 
             return localizedLanguages;
