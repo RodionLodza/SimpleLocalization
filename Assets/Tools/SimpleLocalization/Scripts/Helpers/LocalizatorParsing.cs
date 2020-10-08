@@ -6,11 +6,9 @@ namespace SimpleLocalization.Helpers
 {
     public static class LocalizatorParsing
     {
-        private const string PathTranslationsFile = "SimpleLocalization/Translations";
-
         public static List<LocalizedLanguageElement> ParseTranslationFile()
         {
-            TextAsset translationsFile = Resources.Load<TextAsset>(PathTranslationsFile);
+            TextAsset translationsFile = LocalizatorLocalFiles.ReadLocalizationFile();
             List<LocalizedLanguageElement> localizedLanguages = new List<LocalizedLanguageElement>();
 
             if (translationsFile != null)

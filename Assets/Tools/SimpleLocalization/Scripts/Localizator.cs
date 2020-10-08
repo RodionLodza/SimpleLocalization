@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SimpleLocalization.Settings;
+using System.Collections.Generic;
 using SimpleLocalization.Helpers;
 using UnityEngine;
 using System.Linq;
@@ -17,7 +18,12 @@ namespace SimpleLocalization
 
         static Localizator()
         {
-            ParseTranslationFile();
+            LocalizatorSettingsWrapper.LoadSettings(LoadTranslationFile);
+        }
+
+        private static void LoadTranslationFile()
+        {
+            LocalizatorWebLoader.DownloadTranslationFile(ParseTranslationFile);
         }
 
         #region Parsing methods
