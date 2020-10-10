@@ -8,12 +8,12 @@ namespace SimpleLocalization.Helpers
     {
         public static List<LocalizedLanguageElement> ParseTranslationFile()
         {
-            TextAsset translationsFile = LocalizatorLocalFiles.ReadLocalizationFile();
+            string translationsFile = LocalizatorLocalFiles.ReadLocalizationFile();
             List<LocalizedLanguageElement> localizedLanguages = new List<LocalizedLanguageElement>();
 
             if (translationsFile != null)
             {
-                string[] translationsLine = translationsFile.text.Split('\n');
+                string[] translationsLine = translationsFile.Split('\n');
                 if (translationsLine.Length > 0)
                 {
                     localizedLanguages.Clear();
@@ -39,12 +39,12 @@ namespace SimpleLocalization.Helpers
                 }
                 else
                 {
-                    Debug.LogWarning("<color=red>SIMPLE-LOCALIZATOR ERROR</color>: Translations file is empty!");
+                    Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Translations file is empty!");
                 }
             }
             else
             {
-                Debug.LogWarning("<color=red>SIMPLE-LOCALIZATOR ERROR</color>: Translations file doesn't exist!");
+                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Translations file doesn't exist!");
             }
 
             return localizedLanguages;

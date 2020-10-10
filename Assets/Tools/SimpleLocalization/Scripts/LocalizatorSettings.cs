@@ -71,7 +71,7 @@ namespace SimpleLocalization.Settings
 
             if (settingsFile == null)
             {
-                Debug.LogWarning("<color=red>SIMPLE-LOCALIZATOR ERROR</color>: Can't find localizator setting file Resources/SimpleLocalization/LocalizatorSettings.json");
+                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Can't find localizator setting file Resources/SimpleLocalization/LocalizatorSettings.json");
                 return;
             }
 
@@ -83,7 +83,7 @@ namespace SimpleLocalization.Settings
         public static void SaveSettings(Action onSavingSettingFinished = null)
         {
             var settingsString = JsonUtility.ToJson(localizatorSettings);
-            StreamWriter writer = new StreamWriter(settingsFilePath, true);
+            StreamWriter writer = new StreamWriter(settingsFilePath, false);
             writer.WriteLine(settingsString);
             writer.Close();
             onSavingSettingFinished?.Invoke();

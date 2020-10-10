@@ -10,28 +10,44 @@ namespace SimpleLocalization
     public static class Localizator
     {
         public static event Action OnLanguageChanged = null;
-        
+
         private const string ForceSetLanguage = "ForceSetLanguage";
 
         private static List<LocalizedLanguageElement> localizedLanguages = null;
         private static LocalizedLanguageElement cashLocalizedCurrentLanguage = null;
 
-        static Localizator()
-        {
-            LocalizatorSettingsWrapper.LoadSettings(LoadTranslationFile);
-        }
+        private static bool isInitialized = false;
 
         #region General methods
 
+        static Localizator()
+        {
+            Debug.Log("Localizator()");
+            if (!isInitialized)
+            {
+                ParseTranslationFile();
+            }
+        }
+
+        public static void Initialize()
+        {
+            Debug.Log("Init()");
+            LocalizatorSettingsWrapper.LoadSettings(LoadTranslationFile);
+        }
+
         private static void LoadTranslationFile()
         {
+            Debug.Log("LoadTranslationFile()");
             LocalizatorWebLoader.DownloadTranslationFile(ParseTranslationFile);
         }
 
         private static void ParseTranslationFile()
         {
+            Debug.Log("ParseTranslationFile()");
             localizedLanguages = LocalizatorParsing.ParseTranslationFile();
             CacheCurrentLanguage();
+
+            isInitialized = true;
         }
 
         private static void CacheCurrentLanguage()
@@ -51,6 +67,12 @@ namespace SimpleLocalization
         /// <returns></returns>
         public static string Translate(string key, CaseType caseType = CaseType.Default)
         {
+            if (!isInitialized)
+            {
+                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Localizator isn't initialized!");
+                return string.Empty;
+            }
+            
             string translatedString = cashLocalizedCurrentLanguage.GetLocalizedText(key);
             return translatedString is null ? $"Key '{key}' not found!"
                 : translatedString.SetCaseType(caseType);
@@ -64,6 +86,12 @@ namespace SimpleLocalization
         /// <returns></returns>
         public static string Translate(string key, SystemLanguage language, CaseType caseType = CaseType.Default)
         {
+            if (!isInitialized)
+            {
+                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Localizator isn't initialized!");
+                return string.Empty;
+            }
+
             LocalizedLanguageElement localizedLanguage = localizedLanguages.Find(x => x.Language == language);
             return localizedLanguage is null ? $"Key '{key}' not found for language {language}!"
                 : localizedLanguage.GetLocalizedText(key).SetCaseType(caseType);

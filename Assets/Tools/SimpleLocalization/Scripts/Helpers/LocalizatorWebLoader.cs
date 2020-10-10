@@ -62,13 +62,12 @@ namespace SimpleLocalization.Helpers
 
             if (request.isNetworkError || request.isHttpError)
             {
-                Debug.LogWarning("<color=red>SIMPLE-LOCALIZATOR ERROR</color>: Network or http error on downloading localizator file.");
+                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Network or http error on downloading localizator file.");
                 onLoadedEnded?.Invoke();
             }
             else
             {
-                LocalizatorLocalFiles.WriteLocalizationFile(request.downloadHandler.text);
-                onLoadedEnded?.Invoke();
+                LocalizatorLocalFiles.WriteLocalizationFile(request.downloadHandler.text, onLoadedEnded);
             }
 
             request.Dispose();
