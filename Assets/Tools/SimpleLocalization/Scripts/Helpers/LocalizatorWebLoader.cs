@@ -2,8 +2,8 @@
 using SimpleLocalization.Settings;
 using UnityEngine.Networking;
 using System.Collections;
-using System;
 using UnityEngine;
+using System;
 
 namespace SimpleLocalization.Helpers
 {
@@ -29,10 +29,10 @@ namespace SimpleLocalization.Helpers
                     break;
                 case DownloadingType.AutoOnDevice:
                     {
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
                         onLoadedEnded?.Invoke();
 #else
-                        //TODO Add downloading with monoBehaviour couroutine
+                        LoadOnDevice(onLoadedEnded);
 #endif
                     }
                     break;
@@ -41,7 +41,7 @@ namespace SimpleLocalization.Helpers
 #if UNITY_EDITOR
                         EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettingsWrapper.ActualTableLink, onLoadedEnded));
 #else
-                        //TODO Add downloading with monoBehaviour couroutine
+                        LoadOnDevice(onLoadedEnded);
 #endif
                     }
                     break;
@@ -72,5 +72,19 @@ namespace SimpleLocalization.Helpers
 
             request.Dispose();
         }
+
+        private static void LoadOnDevice(Action onLoadedEnded)
+        {
+            GameObject gameObject = new GameObject("LocalizatorWebLoader");
+            LocalizatorWebLoaderController localizatorWebLoaderController = gameObject.AddComponent<LocalizatorWebLoaderController>();
+            UnityEngine.Object.DontDestroyOnLoad(gameObject);
+
+            onLoadedEnded += () => UnityEngine.Object.Destroy(gameObject);
+            localizatorWebLoaderController.StartCoroutine(StartLoadingFile(LocalizatorSettingsWrapper.ActualTableLink, onLoadedEnded));
+        }
+    }
+
+    public class LocalizatorWebLoaderController : MonoBehaviour
+    {
     }
 }

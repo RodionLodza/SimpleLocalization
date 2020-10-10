@@ -7,17 +7,16 @@ namespace SimpleLocalization.Helpers
     public static class LocalizatorLocalFiles
     {
         private static readonly string PathTranslationsFile = $"{Application.dataPath}/Resources/SimpleLocalization/Translations.txt";
-        private static readonly string PathTranslationsFileInResources = "SimpleLocalization/Translations.txt";
         private static readonly string PathTranslationsFileDevice = $"{Application.persistentDataPath}/Translations.txt";
 
         public static string ReadLocalizationFile()
         {
             string translationsFile = null;
-            TextAsset translationsTextAsset = default;
-
+            
 #if UNITY_EDITOR
-            translationsTextAsset = Resources.Load<TextAsset>(PathTranslationsFileInResources);
-            translationsFile = translationsTextAsset.text;
+            StreamReader rider = new StreamReader(PathTranslationsFile);
+            translationsFile = rider.ReadToEnd();
+            rider.Close();
 #else
         if (File.Exists(PathTranslationsFileDevice))
         {
@@ -27,7 +26,8 @@ namespace SimpleLocalization.Helpers
         }
         else
         {
-            translationsTextAsset = Resources.Load<TextAsset>(PathTranslationsFileInResources);
+            TextAsset translationsTextAsset = default;    
+            translationsTextAsset = Resources.Load<TextAsset>("SimpleLocalization/Translations");
             translationsFile = translationsTextAsset.text;
         }
 #endif
