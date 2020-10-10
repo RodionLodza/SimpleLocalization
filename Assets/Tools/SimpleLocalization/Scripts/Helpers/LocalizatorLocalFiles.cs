@@ -7,7 +7,7 @@ namespace SimpleLocalization.Helpers
     public static class LocalizatorLocalFiles
     {
         private static readonly string PathTranslationsFile = $"{Application.dataPath}/Resources/SimpleLocalization/Translations.txt";
-        private static readonly string PathTranslationsFileDevice = $"{Application.persistentDataPath}/Translations.txt";
+        private static readonly string PathTranslationsFileDevice = Path.Combine(Application.persistentDataPath, "Translations.txt");
 
         public static string ReadLocalizationFile()
         {
@@ -42,7 +42,7 @@ namespace SimpleLocalization.Helpers
             path = PathTranslationsFileDevice;
 #endif
 
-            StreamWriter writer = new StreamWriter(PathTranslationsFile, false);
+            StreamWriter writer = new StreamWriter(path, false);
             writer.WriteLine(translationsFile);
             writer.Close();
 

@@ -1,4 +1,7 @@
-﻿using Unity.EditorCoroutines.Editor;
+﻿#if UNITY_EDITOR
+using Unity.EditorCoroutines.Editor;
+#endif
+
 using SimpleLocalization.Settings;
 using UnityEngine.Networking;
 using System.Collections;
@@ -29,7 +32,7 @@ namespace SimpleLocalization.Helpers
                     break;
                 case DownloadingType.AutoOnDevice:
                     {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
                         onLoadedEnded?.Invoke();
 #else
                         LoadOnDevice(onLoadedEnded);
@@ -50,7 +53,9 @@ namespace SimpleLocalization.Helpers
 
         public static void ForceDownloadTranslationFile(Action onLoadedEnded)
         {
+#if UNITY_EDITOR
             EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettingsWrapper.ActualTableLink, onLoadedEnded));
+#endif
         }
 
         private static IEnumerator StartLoadingFile(string link, Action onLoadedEnded)
