@@ -8,6 +8,11 @@ public class DynamicText : MonoBehaviour
 
     private void Start()
     {
+        Localizator.Initialize();
+    }
+
+    public void SetText()
+    {
         someText.text = Localizator.Translate("coins");
     }
 }
