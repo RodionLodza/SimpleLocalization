@@ -5,7 +5,7 @@ using System;
 
 namespace SimpleLocalization.Settings.Data
 {
-    public class LocalizatorSettings
+    public class LocalizatorSettingsData
     {
         public string releaseTableLink = null;
         public string developmentTableLink = null;
@@ -17,9 +17,9 @@ namespace SimpleLocalization.Settings.Data
 
 namespace SimpleLocalization.Settings
 {
-    public class LocalizatorSettingsWrapper
+    public class LocalizatorSettings
     {
-        private static LocalizatorSettings localizatorSettings = null;
+        private static LocalizatorSettingsData localizatorSettings = null;
         private static string settingsFilePath = "Assets/Resources/SimpleLocalization/LocalizatorSettings.json";
 
         #region Properties
@@ -76,7 +76,7 @@ namespace SimpleLocalization.Settings
             }
 
             var settingsString = settingsFile.text;
-            localizatorSettings = JsonUtility.FromJson<LocalizatorSettings>(settingsString);
+            localizatorSettings = JsonUtility.FromJson<LocalizatorSettingsData>(settingsString);
             onLoadingSettingFinished?.Invoke();
         }
 

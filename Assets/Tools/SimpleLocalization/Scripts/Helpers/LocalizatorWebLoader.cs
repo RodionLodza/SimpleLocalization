@@ -14,7 +14,7 @@ namespace SimpleLocalization.Helpers
     {
         public static void DownloadTranslationFile(Action onLoadedEnded)
         {
-            switch (LocalizatorSettingsWrapper.DownloadingType)
+            switch (LocalizatorSettings.DownloadingType)
             {
                 case DownloadingType.ManualInEditor:
                     {
@@ -26,7 +26,7 @@ namespace SimpleLocalization.Helpers
 #if !UNITY_EDITOR
                         onLoadedEnded?.Invoke();
 #else
-                        EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettingsWrapper.ActualTableLink, onLoadedEnded));
+                        EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettings.ActualTableLink, onLoadedEnded));
 #endif
                     }
                     break;
@@ -42,7 +42,7 @@ namespace SimpleLocalization.Helpers
                 case DownloadingType.Always:
                     {
 #if UNITY_EDITOR
-                        EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettingsWrapper.ActualTableLink, onLoadedEnded));
+                        EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettings.ActualTableLink, onLoadedEnded));
 #else
                         LoadOnDevice(onLoadedEnded);
 #endif
@@ -55,7 +55,7 @@ namespace SimpleLocalization.Helpers
         {
             UnityWebRequest request = UnityWebRequest.Get(link);
 
-            request.timeout = LocalizatorSettingsWrapper.DownloadingTimeout;
+            request.timeout = LocalizatorSettings.DownloadingTimeout;
             yield return request.SendWebRequest();
 
             if (request.isNetworkError || request.isHttpError)
@@ -78,7 +78,7 @@ namespace SimpleLocalization.Helpers
             UnityEngine.Object.DontDestroyOnLoad(gameObject);
 
             onLoadedEnded += () => UnityEngine.Object.Destroy(gameObject);
-            localizatorWebLoaderController.StartCoroutine(StartLoadingFile(LocalizatorSettingsWrapper.ActualTableLink, onLoadedEnded));
+            localizatorWebLoaderController.StartCoroutine(StartLoadingFile(LocalizatorSettings.ActualTableLink, onLoadedEnded));
         }
     }
 

@@ -1,16 +1,16 @@
-﻿using UnityEngine.UI;
-using UnityEngine;
+﻿using UnityEngine;
+using TMPro;
 
 namespace SimpleLocalization
 {
     [ExecuteInEditMode]
-    [RequireComponent(typeof(Text))]
-    public class LocalizedText : MonoBehaviour
+    [RequireComponent(typeof(TextMeshPro))]
+    public class LocalizedTextMeshPro : MonoBehaviour
     {
+        [SerializeField] private TextMeshPro textComponent = null;
         [SerializeField] private string translationKey = string.Empty;
         [SerializeField] private CaseType caseType = CaseType.Default;
 
-        private Text textComponent = null;
         private bool textIsSet = false;
 
         private void Awake()
@@ -30,6 +30,7 @@ namespace SimpleLocalization
         private void OnValidate()
         {
             SetTranslatedText();
+            CashTextComponent();
         }
 
         private void OnDestroy()
@@ -39,15 +40,7 @@ namespace SimpleLocalization
 
         private void SetTranslatedText()
         {
-            if (textComponent is null)
-            {
-                textComponent = GetComponent<Text>();
-            }
-
-            if (textComponent is null)
-            {
-                return;
-            }
+            CashTextComponent();
 
             string localizedText = Localizator.Translate(translationKey, caseType);
             if (string.IsNullOrEmpty(localizedText))
@@ -55,6 +48,14 @@ namespace SimpleLocalization
                 localizedText = $"Key '{translationKey}' not found!";
             }
             textComponent.text = localizedText;
+        }
+
+        private void CashTextComponent()
+        {
+            if (textComponent is null)
+            {
+                textComponent = GetComponent<TextMeshPro>();
+            }
         }
     }
 }

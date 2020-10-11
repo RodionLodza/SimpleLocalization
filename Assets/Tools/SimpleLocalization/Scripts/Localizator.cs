@@ -30,7 +30,7 @@ namespace SimpleLocalization
 
         public static void Initialize()
         {
-            LocalizatorSettingsWrapper.LoadSettings(LoadTranslationFile);
+            LocalizatorSettings.LoadSettings(LoadTranslationFile);
         }
 
         private static void LoadTranslationFile()

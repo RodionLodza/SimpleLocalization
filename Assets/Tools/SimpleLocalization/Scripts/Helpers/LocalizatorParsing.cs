@@ -28,9 +28,16 @@ namespace SimpleLocalization.Helpers
                     for (int j = 1; j < translationsLine.Length; j++)
                     {
                         line = translationsLine[j].Trim().Split('\t');
+                        int countTranslationsInLine = line.Length - 1;
+
+                        if (countTranslationsInLine != localizedLanguages.Count)
+                        {
+                            Debug.LogWarning($"<color=yellow>SIMPLE-LOCALIZATOR WARNING</color>: The key '{line[0].Trim()}' is not translated into all languages!");
+                        }
+
                         if (line.Length > 1)
                         {
-                            for (int k = 0; k < localizedLanguages.Count; k++)
+                            for (int k = 0; k < countTranslationsInLine; k++)
                             {
                                 localizedLanguages[k].AddTranlsation(new LocalizedTextElement(line[0].Trim(), line[k + 1].Trim().NewlineReplacer()));
                             }

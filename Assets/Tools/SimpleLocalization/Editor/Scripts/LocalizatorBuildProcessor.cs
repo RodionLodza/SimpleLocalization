@@ -13,13 +13,13 @@ public class LocalizatorBuildProcessor : IPreprocessBuildWithReport
 
     public void OnPreprocessBuild(BuildReport report)
     {
-        Debug.Log("PreprocessBuild: Downloading localization started.");
-        LocalizatorSettingsWrapper.LoadSettings(CheckDownloadingLocalization);
+        Debug.Log("SIMPLE-LOCALIZATOR: preprocess build downloading localization started.");
+        LocalizatorSettings.LoadSettings(CheckDownloadingLocalization);
     }
 
     private void CheckDownloadingLocalization()
     {
-        switch (LocalizatorSettingsWrapper.PreprocessingDownloading)
+        switch (LocalizatorSettings.PreprocessingDownloading)
         {
             case PreprocessBuildDownloading.NotUse:
                 break;
@@ -50,9 +50,9 @@ public class LocalizatorBuildProcessor : IPreprocessBuildWithReport
 
     private void DownloadLocalization()
     {
-        UnityWebRequest request = UnityWebRequest.Get(LocalizatorSettingsWrapper.ActualTableLink);
+        UnityWebRequest request = UnityWebRequest.Get(LocalizatorSettings.ActualTableLink);
 
-        request.timeout = LocalizatorSettingsWrapper.DownloadingTimeout;
+        request.timeout = LocalizatorSettings.DownloadingTimeout;
         request.SendWebRequest();
 
         while (!request.isDone)
@@ -74,7 +74,7 @@ public class LocalizatorBuildProcessor : IPreprocessBuildWithReport
 
     private void DownloadingFinishedHandler()
     {
-        Debug.Log("PreprocessBuild: Downloading localization finished.");
+        Debug.Log("SIMPLE-LOCALIZATOR: preprocess build downloading localization finished.");
     }
 }
 
