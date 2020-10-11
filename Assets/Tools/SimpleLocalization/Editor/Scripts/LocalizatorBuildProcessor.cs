@@ -21,9 +21,9 @@ public class LocalizatorBuildProcessor : IPreprocessBuildWithReport
     {
         switch (LocalizatorSettings.PreprocessingDownloading)
         {
-            case PreprocessBuildDownloading.NotUse:
+            case PreprocessBuildDownloadingType.NotUse:
                 break;
-            case PreprocessBuildDownloading.OnlyDevelopmentBuild:
+            case PreprocessBuildDownloadingType.OnlyDevelopmentBuild:
                 {
 #if DEVELOPMENT_BUILD
                     Debug.Log("PreprocessBuildDownloading.OnlyDevelopmentBuild");
@@ -31,14 +31,14 @@ public class LocalizatorBuildProcessor : IPreprocessBuildWithReport
 #endif
                 }
                 break;
-            case PreprocessBuildDownloading.OnlyReleaseBuild:
+            case PreprocessBuildDownloadingType.OnlyReleaseBuild:
                 {
 #if !DEVELOPMENT_BUILD
                     DownloadLocalization();
 #endif
                 }
                 break;
-            case PreprocessBuildDownloading.AnyBuild:
+            case PreprocessBuildDownloadingType.AnyBuild:
                 {
                     DownloadLocalization();
                 }

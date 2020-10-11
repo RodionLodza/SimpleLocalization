@@ -10,7 +10,7 @@ namespace SimpleLocalization.Settings.Data
         public string releaseTableLink = null;
         public string developmentTableLink = null;
         public DownloadingType downloadingType = default;
-        public PreprocessBuildDownloading preprocessingDownloading = default;
+        public PreprocessBuildDownloadingType preprocessingDownloading = default;
         public int downloadingTimeout = 5;
     }
 }
@@ -23,6 +23,22 @@ namespace SimpleLocalization.Settings
         private static string settingsFilePath = "Assets/Resources/SimpleLocalization/LocalizatorSettings.json";
 
         #region Properties
+
+        public static string ReleaseTableLink
+        {
+            get
+            {
+                return localizatorSettings.releaseTableLink;
+            }
+        }
+
+        public static string DevelopmentTableLink
+        {
+            get
+            {
+                return localizatorSettings.developmentTableLink;
+            }
+        }
 
         public static string ActualTableLink
         {
@@ -45,7 +61,7 @@ namespace SimpleLocalization.Settings
             }
         }
 
-        public static PreprocessBuildDownloading PreprocessingDownloading
+        public static PreprocessBuildDownloadingType PreprocessingDownloading
         {
             get
             {
@@ -89,6 +105,15 @@ namespace SimpleLocalization.Settings
             onSavingSettingFinished?.Invoke();
         }
 
+        public static void SetSettings(string releaseTableLink, string developmentTableLink, DownloadingType downloadingType, PreprocessBuildDownloadingType preprocessingDownloading, int downloadingTimeout)
+        {
+            localizatorSettings.releaseTableLink = releaseTableLink;
+            localizatorSettings.developmentTableLink = developmentTableLink;
+            localizatorSettings.downloadingType = downloadingType;
+            localizatorSettings.preprocessingDownloading = preprocessingDownloading;
+            localizatorSettings.downloadingTimeout = downloadingTimeout;
+        }
+
         #endregion
     }
 
@@ -100,7 +125,7 @@ namespace SimpleLocalization.Settings
         Always
     }
 
-    public enum PreprocessBuildDownloading
+    public enum PreprocessBuildDownloadingType
     {
         NotUse,
         OnlyDevelopmentBuild,

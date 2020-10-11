@@ -40,7 +40,8 @@ namespace SimpleLocalization
 
         private static void ParseTranslationFile()
         {
-            localizedLanguages = LocalizatorParsing.ParseTranslationFile();
+            var parseInfo = LocalizatorParsing.ParseTranslationFile();
+            localizedLanguages = parseInfo.localizedLanguages;
             CacheCurrentLanguage();
 
             isInitialized = true;
@@ -202,6 +203,16 @@ namespace SimpleLocalization
         public static string GetCurrentUseLanguage()
         {
             return GetCurrentLanguage().ToString();
+        }
+
+        public static bool ParseTranslationFileWithReport()
+        {
+            var parseInfo = LocalizatorParsing.ParseTranslationFile();
+            localizedLanguages = parseInfo.localizedLanguages;
+            CacheCurrentLanguage();
+
+            isInitialized = true;
+            return parseInfo.withWarnings;
         }
 #endif
         #endregion

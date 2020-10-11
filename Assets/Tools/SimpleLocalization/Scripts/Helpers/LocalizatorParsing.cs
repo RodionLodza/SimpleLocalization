@@ -6,10 +6,11 @@ namespace SimpleLocalization.Helpers
 {
     public static class LocalizatorParsing
     {
-        public static List<LocalizedLanguageElement> ParseTranslationFile()
+        public static (List<LocalizedLanguageElement> localizedLanguages, bool withWarnings) ParseTranslationFile()
         {
             string translationsFile = LocalizatorLocalFiles.ReadLocalizationFile();
             List<LocalizedLanguageElement> localizedLanguages = new List<LocalizedLanguageElement>();
+            bool withWarnings = false;
 
             if (translationsFile != null)
             {
@@ -33,6 +34,7 @@ namespace SimpleLocalization.Helpers
                         if (countTranslationsInLine != localizedLanguages.Count)
                         {
                             Debug.LogWarning($"<color=yellow>SIMPLE-LOCALIZATOR WARNING</color>: The key '{line[0].Trim()}' is not translated into all languages!");
+                            withWarnings = true;
                         }
 
                         if (line.Length > 1)
@@ -46,15 +48,17 @@ namespace SimpleLocalization.Helpers
                 }
                 else
                 {
-                    Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Translations file is empty!");
+                    Debug.LogError("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Translations file is empty!");
+                    withWarnings = true;
                 }
             }
             else
             {
-                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Translations file doesn't exist!");
+                Debug.LogError("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Translations file doesn't exist!");
+                withWarnings = true;
             }
 
-            return localizedLanguages;
+            return (localizedLanguages, withWarnings);
         }
 
         private static SystemLanguage ParseSystemLanguage(string languageName)
