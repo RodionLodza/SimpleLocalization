@@ -22,7 +22,6 @@ namespace SimpleLocalization
 
         static Localizator()
         {
-            Debug.Log("Localizator()");
             if (!isInitialized)
             {
                 ParseTranslationFile();
@@ -31,19 +30,16 @@ namespace SimpleLocalization
 
         public static void Initialize()
         {
-            Debug.Log("Init()");
             LocalizatorSettingsWrapper.LoadSettings(LoadTranslationFile);
         }
 
         private static void LoadTranslationFile()
         {
-            Debug.Log("LoadTranslationFile()");
             LocalizatorWebLoader.DownloadTranslationFile(ParseTranslationFile);
         }
 
         private static void ParseTranslationFile()
         {
-            Debug.Log("ParseTranslationFile()");
             localizedLanguages = LocalizatorParsing.ParseTranslationFile();
             CacheCurrentLanguage();
 
@@ -116,9 +112,13 @@ namespace SimpleLocalization
         {
             SystemLanguage currentLanguage;
             if (PlayerPrefs.HasKey(ForceSetLanguage))
+            {
                 currentLanguage = (SystemLanguage)PlayerPrefs.GetInt(ForceSetLanguage);
+            }
             else
+            {
                 currentLanguage = Application.systemLanguage;
+            }
 
             return localizedLanguages.Where(x => x.Language == currentLanguage).FirstOrDefault() is null ? 
                 localizedLanguages[0].Language : currentLanguage;
@@ -135,7 +135,7 @@ namespace SimpleLocalization
         {
             if (localizedLanguages.Count == 0)
             {
-                Debug.LogWarning("Localizator didn't find any language in translations file.");
+                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: localizator didn't find any language in translations file.");
                 return;
             }
 
@@ -155,7 +155,7 @@ namespace SimpleLocalization
         {
             if (localizedLanguages.Count == 0)
             {
-                Debug.LogWarning("Localizator didn't find any language in translations file.");
+                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: localizator didn't find any language in translations file.");
                 return;
             }
 
@@ -171,7 +171,9 @@ namespace SimpleLocalization
         public static SystemLanguage[] GetAvailableLanguages()
         {
             if (localizedLanguages.Count == 0)
+            {
                 ParseTranslation();
+            }
             return localizedLanguages.Select(x => x.Language).ToArray();
         }
 

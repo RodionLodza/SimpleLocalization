@@ -40,14 +40,20 @@ namespace SimpleLocalization
         private void SetTranslatedText()
         {
             if (textComponent is null)
+            {
                 textComponent = GetComponent<Text>();
+            }
 
-            if (textComponent is null) 
+            if (textComponent is null)
+            {
                 return;
+            }
 
             string localizedText = Localizator.Translate(translationKey, caseType);
             if (string.IsNullOrEmpty(localizedText))
+            {
                 localizedText = $"Key '{translationKey}' not found!";
+            }
             textComponent.text = localizedText;
         }
     }

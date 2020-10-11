@@ -51,13 +51,6 @@ namespace SimpleLocalization.Helpers
             }
         }
 
-        public static void ForceDownloadTranslationFile(Action onLoadedEnded)
-        {
-#if UNITY_EDITOR
-            EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettingsWrapper.ActualTableLink, onLoadedEnded));
-#endif
-        }
-
         private static IEnumerator StartLoadingFile(string link, Action onLoadedEnded)
         {
             UnityWebRequest request = UnityWebRequest.Get(link);

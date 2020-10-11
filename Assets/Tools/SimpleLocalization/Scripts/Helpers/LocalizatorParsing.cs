@@ -53,7 +53,9 @@ namespace SimpleLocalization.Helpers
         private static SystemLanguage ParseSystemLanguage(string languageName)
         {
             if (!Enum.IsDefined(typeof(SystemLanguage), languageName))
+            {
                 return SystemLanguage.Unknown;
+            }
 
             return (SystemLanguage)Enum.Parse(typeof(SystemLanguage), languageName);
         }
