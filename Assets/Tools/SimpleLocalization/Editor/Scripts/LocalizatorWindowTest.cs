@@ -69,6 +69,22 @@ public class LocalizatorWindowTest : EditorWindow
         EditorGUILayout.EndHorizontal();
     }
 
+    private void CashLanguages()
+    {
+        if (cashLanguages != null)
+        {
+            return;
+        }
+        
+        var availableLanguages = Localizator.GetAvailableLanguages();
+        cashLanguages = new string[availableLanguages.Length];
+
+        for (int i = 0; i < availableLanguages.Length; i++)
+        {
+            cashLanguages[i] = availableLanguages[i].ToString();
+        }
+    }
+
     private void OnGUI()
     {
         ShowLogo();
@@ -105,11 +121,15 @@ public class LocalizatorWindowTest : EditorWindow
     private void ShowSettingsTab()
     {
         DrawSpace(1);
+        CashLanguages();
         releaseTableLink = EditorGUILayout.TextField("Release table link: ", releaseTableLink);
         developmentTableLink = EditorGUILayout.TextField("Development table link: ", developmentTableLink);
 
-        int.TryParse(EditorGUILayout.TextField("Downloading timeout: ", downloadingTimeout.ToString()), out downloadingTimeout);
-        
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Downloading timeout:");
+        downloadingTimeout = (int)EditorGUILayout.Slider(downloadingTimeout, 1, 15);
+        EditorGUILayout.EndHorizontal();
+
         var popupStyle = GUI.skin.GetStyle("Popup");
         popupStyle.fontSize = 11;
 
@@ -159,21 +179,14 @@ public class LocalizatorWindowTest : EditorWindow
 
     private void ShowGeneralInformation()
     {
-        var availableLanguages = Localizator.GetAvailableLanguages();
-        cashLanguages = new string[availableLanguages.Length];
-
-        for (int i = 0; i < availableLanguages.Length; i++)
-        {
-            cashLanguages[i] = availableLanguages[i].ToString();
-        }
-
+        CashLanguages();
         var italicStyle = new GUIStyle(GUI.skin.GetStyle("Label"));
         italicStyle.fontStyle = FontStyle.Italic;
         italicStyle.alignment = TextAnchor.LowerLeft;
 
         EditorGUILayout.LabelField("General information", EditorStyles.boldLabel);
         EditorGUILayout.LabelField("Current language: ", Localizator.GetCurrentUseLanguage(), italicStyle);
-        EditorGUILayout.LabelField("Available languages: ", availableLanguages.Length.ToString(), italicStyle);
+        EditorGUILayout.LabelField("Available languages: ", cashLanguages.Length.ToString(), italicStyle);
         DrawSpace(2);
     }
 
@@ -244,7 +257,14 @@ public class LocalizatorWindowTest : EditorWindow
 
     private void ShowParsingInfo()
     {
-        // TODO Add general parsing info, keys and values
+        DrawSpace(1);
+        var italicStyle = new GUIStyle(GUI.skin.GetStyle("Label"));
+        italicStyle.fontStyle = FontStyle.Italic;
+        italicStyle.alignment = TextAnchor.LowerLeft;
+
+        EditorGUILayout.LabelField("Parsing information", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Parsed languages: ", cashLanguages.Length.ToString(), italicStyle);
+        EditorGUILayout.LabelField("Parsed keys: ", Localizator.GetCountParsedKeys().ToString(), italicStyle);
     }
 
     #endregion

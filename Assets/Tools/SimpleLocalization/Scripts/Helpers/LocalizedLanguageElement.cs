@@ -34,6 +34,15 @@ namespace SimpleLocalization.Helpers
 
             return localizedString;
         }
+
+        #region Editor methods
+
+        public int GetCountKeys()
+        {
+            return translations.Count;
+        }
+
+        #endregion
     }
 
     public class LocalizedTextElement

@@ -205,6 +205,10 @@ namespace SimpleLocalization
             return GetCurrentLanguage().ToString();
         }
 
+        /// <summary>
+        /// Return tuple with parsing info (for editor only).
+        /// </summary>
+        /// <returns></returns>
         public static bool ParseTranslationFileWithReport()
         {
             var parseInfo = LocalizatorParsing.ParseTranslationFile();
@@ -214,6 +218,16 @@ namespace SimpleLocalization
             isInitialized = true;
             return parseInfo.withWarnings;
         }
+
+        /// <summary>
+        /// For editor only.
+        /// </summary>
+        /// <returns></returns>
+        public static int GetCountParsedKeys()
+        {
+            return cashLocalizedCurrentLanguage.GetCountKeys();
+        }
+
 #endif
         #endregion
     }
