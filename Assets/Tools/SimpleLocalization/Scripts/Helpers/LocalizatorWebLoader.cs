@@ -80,9 +80,38 @@ namespace SimpleLocalization.Helpers
             onLoadedEnded += () => UnityEngine.Object.Destroy(gameObject);
             localizatorWebLoaderController.StartCoroutine(StartLoadingFile(LocalizatorSettings.ActualTableLink, onLoadedEnded));
         }
+
+#if UNITY_EDITOR
+
+        public static void DownloadTranslationFileFromEditorWindow(BuildType buildType, Action onLoadedEnded)
+        {
+            switch (buildType)
+            {
+                case BuildType.Release:
+                    {
+                        EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettings.ReleaseTableLink, onLoadedEnded));
+                    }
+                    break;
+                case BuildType.Development:
+                    {
+                        EditorCoroutineUtility.StartCoroutineOwnerless(StartLoadingFile(LocalizatorSettings.DevelopmentTableLink, onLoadedEnded));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+#endif
     }
 
     public class LocalizatorWebLoaderController : MonoBehaviour
     {
+    }
+
+    public enum BuildType
+    {
+        Release,
+        Development
     }
 }

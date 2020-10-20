@@ -31,6 +31,11 @@ namespace SimpleLocalization.Helpers
                         line = translationsLine[j].Trim().Split('\t');
                         int countTranslationsInLine = line.Length - 1;
 
+                        if (line.Length == 1 && string.Equals(line[0], ""))
+                        {
+                            continue;
+                        }
+
                         if (countTranslationsInLine != localizedLanguages.Count)
                         {
                             Debug.LogWarning($"<color=yellow>SIMPLE-LOCALIZATOR WARNING</color>: The key '{line[0].Trim()}' is not translated into all languages!");
