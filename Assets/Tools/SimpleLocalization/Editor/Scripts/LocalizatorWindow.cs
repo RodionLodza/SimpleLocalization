@@ -49,7 +49,7 @@ namespace SimpleLocalization.Editor
 
         private void ShowLogo()
         {
-            GUI.DrawTexture(new Rect(position.width / 2 - 138, 0, 276, 51), logo, ScaleMode.ScaleToFit, true, 10.0F);
+            GUI.DrawTexture(new Rect(20, 0, 340, 50), logo, ScaleMode.ScaleToFit, true, 0);
             DrawSpace(8);
         }
 
