@@ -15,11 +15,9 @@ Plugin for localizing Unity projects using Google Tables. It can translate Text 
 5. Ability to download translations before building the project
 6. Functionality for quick testing of translations
 7. Validation of translations
-<br />
 
 ## How to use?
 On the [project homepage](https://github.com/RodionLodza/SimpleLocalization/wiki) you can find information about SimpleLocalization:  documentation, getting-started guides and downloading.
-<br />
 <br />
 
 ## License
