@@ -7,7 +7,6 @@ Plugin for localizing Unity projects using Google Tables. It can translate Text 
 <br />
 << [Pipeline](#what-is-the-work-pipeline-with-the-localizator) | [Advantages](#why-use-this-plugin) | [Install](#how-to-install) | [Download](https://github.com/RodionLodza/simplelocalization/raw/master/SimpleLocalization.unitypackage) >>
 <br />
-<br />
 
 ## Features
 1. Automatic translation of Text, TextMeshPro components
@@ -18,16 +17,13 @@ Plugin for localizing Unity projects using Google Tables. It can translate Text 
 6. Functionality for quick testing of translations
 7. Validation of translations
 <br />
-<br />
 
 ## How to use?
 On the project homepage you can find information about SimpleLocalization:  documentation, getting-started guides and downloading.
 <br />
-<br />
 
 ## How to install?
 Download `SimpleLocalization.unitypackage` and using UnityPackageManager.
-<br />
 <br />
 
 ## License
