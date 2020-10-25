@@ -1,11 +1,10 @@
+![0](WikiImages/logo.png)
 # SimpleLocalization
 Plugin for localizing Unity projects using Google Tables. It can translate Text components, TextMeshPro, and receive localized strings in custom scripts. Has flexible customization.
 
 [![](https://img.shields.io/badge/license-MIT-green)](https://github.com/RodionLodza/simplelocalization/blob/master/LICENSE)
 [![Watch on GitHub](https://img.shields.io/github/watchers/RodionLodza/simplelocalization.svg?style=social)](https://github.com/RodionLodza/simplelocalization/watchers)
 [![Star on GitHub](https://img.shields.io/github/stars/RodionLodza/simplelocalization.svg?style=social)](https://github.com/RodionLodza/simplelocalization/stargazers)
-<br />
-<< [Pipeline](#what-is-the-work-pipeline-with-the-localizator) | [Advantages](#why-use-this-plugin) | [Install](#how-to-install) | [Download](https://github.com/RodionLodza/simplelocalization/raw/master/SimpleLocalization.unitypackage) >>
 <br />
 
 ## Features
@@ -16,11 +15,9 @@ Plugin for localizing Unity projects using Google Tables. It can translate Text 
 5. Ability to download translations before building the project
 6. Functionality for quick testing of translations
 7. Validation of translations
-<br />
 
 ## How to use?
-On the project homepage you can find information about SimpleLocalization:  documentation, getting-started guides and downloading.
-<br />
+On the [project homepage](https://github.com/RodionLodza/SimpleLocalization/wiki) you can find information about SimpleLocalization:  documentation, getting-started guides and downloading.
 <br />
 
 ## License
