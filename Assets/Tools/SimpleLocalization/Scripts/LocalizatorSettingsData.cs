@@ -87,12 +87,15 @@ namespace SimpleLocalization.Settings
 
             if (settingsFile == null)
             {
-                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR ERROR</color>: Can't find localizator setting file Resources/SimpleLocalization/LocalizatorSettings.json");
-                return;
+                Debug.LogWarning("<color=yellow>SIMPLE-LOCALIZATOR Warning</color>: Can't find localizator setting file Resources/SimpleLocalization/LocalizatorSettings.json. LocalizatorSettings.json re-created with default values.");
+                localizatorSettings = new LocalizatorSettingsData();
             }
-
-            var settingsString = settingsFile.text;
-            localizatorSettings = JsonUtility.FromJson<LocalizatorSettingsData>(settingsString);
+            else
+            {
+                var settingsString = settingsFile.text;
+                localizatorSettings = JsonUtility.FromJson<LocalizatorSettingsData>(settingsString);
+            }
+       
             onLoadingSettingFinished?.Invoke();
         }
 
